@@ -27,6 +27,7 @@ open class RxCollectionViewSectionedAnimatedDataSource<S: AnimatableSectionModel
     // For some inexplicable reason, when doing animated updates first time
     // it crashes. Still need to figure out that one.
     var dataSet = false
+    public var suspendOnNextFrame = false
 
     private let disposeBag = DisposeBag()
 
@@ -88,8 +89,9 @@ open class RxCollectionViewSectionedAnimatedDataSource<S: AnimatableSectionModel
             #if DEBUG
                 self._dataSourceBound = true
             #endif
-            if !self.dataSet {
+            if !self.dataSet || self.suspendOnNextFrame {
                 self.dataSet = true
+                self.suspendOnNextFrame = false
                 dataSource.setSections(newSections)
                 collectionView.reloadData()
             }
