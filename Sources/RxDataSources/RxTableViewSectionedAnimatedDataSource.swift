@@ -22,6 +22,7 @@ open class RxTableViewSectionedAnimatedDataSource<S: AnimatableSectionModelType>
     public var animationConfiguration = AnimationConfiguration()
 
     var dataSet = false
+    public var suspendOnNextFrame = false
 
     public override init() {
         super.init()
@@ -32,8 +33,9 @@ open class RxTableViewSectionedAnimatedDataSource<S: AnimatableSectionModelType>
             #if DEBUG
                 self._dataSourceBound = true
             #endif
-            if !self.dataSet {
+            if !self.dataSet || self.suspendOnNextFrame {
                 self.dataSet = true
+                self.suspendOnNextFrame = false
                 dataSource.setSections(newSections)
                 tableView.reloadData()
             }
